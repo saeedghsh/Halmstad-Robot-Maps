@@ -31,7 +31,8 @@ Each 3D mesh is horizontally sliced and converted to occupancy-like map.
 Sensor maps vary in their global consistency and coverage of the area.
 In addition, a single layout map (in bitmap format, occupancy-like) is also provided for each environment.  
 
-Following table provides details for each set.
+Following table provides details for each set.  
+
 Name | Type | #sensor maps | #layout | location
 ---- | ---- | ------------ | ------- | --------
 E5 | office building | 14 | 1 | Halmstad University, Sweden

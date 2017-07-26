@@ -105,9 +105,9 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         self.associated_pairs_idx = [] # (src_pt_idx, dst_pt_idx)
 
         # make a dir for saving association results
-        self.associations_path = os.getcwd()+'/keypoint_associations/'
-        if not( os.path.isdir( self.associations_path ) ):
-            os.system( 'mkdir {:s}'.format(self.associations_path) )
+        self.results_path = os.getcwd()+'/../keypoints_associations/'
+        if not( os.path.isdir( self.results_path ) ):
+            os.system( 'mkdir {:s}'.format(self.results_path) )
 
         # self._instructions()
 
@@ -142,25 +142,34 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         return file_path, file_list, current_file_idx
 
     ######################################## generic
-    def _load_files(self, file_path, file_name):
+    def _load_files(self, file_path, file_list, current_file_idx):
         ''''''
         # load image
-        image = np.flipud( cv2.imread( file_path + file_name, cv2.IMREAD_GRAYSCALE) )
+        image = np.flipud( cv2.imread( file_path + file_list[current_file_idx], cv2.IMREAD_GRAYSCALE) )
 
         # check if a key_point_file already exists, if so load from file
-        if file_name[:-3]+'npy' in os.listdir(file_path):
-            key_pts = [list(pt) for pt in np.load(file_path+file_name[:-3]+'npy')]
+
+        keypoint_name = 'keypoints_'+file_list[ current_file_idx ][:-3]+'npy'
+        if keypoint_name in os.listdir(self.results_path):
+            key_pts = [list(pt) for pt in np.load(self.results_path+keypoint_name)]
         else:
             key_pts = []
 
         # both images are selected and already selected
         # check for the existence of the association files
+        association_exists = False
         if (self.src_current_file_idx is not None) and (self.dst_current_file_idx is not None):
             src_name = self.src_file_list[ self.src_current_file_idx ]
             dst_name = self.dst_file_list[ self.dst_current_file_idx ]
             association_name = 'association_'+src_name[:-4]+'_'+dst_name[:-4]+'.npy'
-            association_exists = association_name in os.listdir(self.associations_path)
+            association_exists = association_name in os.listdir(self.results_path)
             self.ui.checkBox_association_exists.setChecked(association_exists)
+
+        if association_exists:
+            self.associated_pairs_idx = [ list(pair) for pair in np.load(self.results_path+association_name) ]
+        else:
+            self.associated_pairs_idx = []
+
 
         return image, key_pts
         
@@ -176,6 +185,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         # plot key points - pts_plt is a list of plot object
         pts_plt = [ canvas.axes.plot(pt[0], pt[1], 'ro', picker=10, label=str(p_idx))[0]
                     for p_idx,pt in enumerate(points) ]
+
         canvas.draw()
 
         return canvas, pts_plt
@@ -197,15 +207,16 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         return pt_marker, canvas, pt_idx
 
     ######################################## generic
+    def _change_kp_appreance(self, plt_obj):
+        # plt_obj.remove()
+        plt_obj.set_picker(0) # this point won't be pickable anymore
+        plt_obj.set_color('b')
+        plt_obj.set_alpha(0.7)
+        # plt_obj.set_marker('*')
+
+    ######################################## generic
     def _mouse_right_click(self):
         ''' right-middle click: establish association '''
-
-        def change_kp_appreance(plt_obj):
-            # plt_obj.remove()
-            plt_obj.set_picker(0) # this point won't be pickable anymore
-            plt_obj.set_color('b')
-            plt_obj.set_alpha(0.7)
-            # plt_obj.set_marker('*')
 
         # add new pair to association list
         self.associated_pairs_idx.append( (self.src_pt_idx, self.dst_pt_idx) )
@@ -213,13 +224,13 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         # remove original and marker on the selected point in the src image
         self.src_pt_marker.pop().remove()
         # self.src_pts_plt[self.src_pt_idx].remove() # dont pop! just remvoe from drawing!
-        change_kp_appreance(self.src_pts_plt[self.src_pt_idx])
+        self._change_kp_appreance(self.src_pts_plt[self.src_pt_idx])
         self.src_pt_idx = None
 
         # remove original and marker on the selected point in the dst image
         self.dst_pt_marker.pop().remove()
         # self.dst_pts_plt[self.dst_pt_idx].remove() # dont pop! just remvoe from drawing!
-        change_kp_appreance(self.dst_pts_plt[self.dst_pt_idx])
+        self._change_kp_appreance(self.dst_pts_plt[self.dst_pt_idx])
         self.dst_pt_idx = None
 
         assert len(self.src_pt_marker) == len(self.dst_pt_marker) == 0
@@ -229,7 +240,6 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         self.src_canvas.draw()
         self.dst_canvas.draw()
 
-
     ########################################
     def _save(self):
         ''''''
@@ -238,10 +248,10 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
             dst_name = self.dst_file_list[ self.dst_current_file_idx ]
             # from source to destination
             association_name = 'association_'+src_name[:-4]+'_'+dst_name[:-4]+'.npy'
-            np.save(self.associations_path+association_name, self.associated_pairs_idx)
+            np.save(self.results_path+association_name, self.associated_pairs_idx)
             # from destination to source
             association_name = 'association_'+dst_name[:-4]+'_'+src_name[:-4]+'.npy'
-            np.save(self.associations_path+association_name, np.roll( self.associated_pairs_idx,1, axis=1) )
+            np.save(self.results_path+association_name, np.roll( self.associated_pairs_idx,1, axis=1) )
 
     ########################################
     def _reset(self):
@@ -251,21 +261,39 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         self.dst_canvas, self.dst_pts_plt = self._plot_image_pts( self.dst_canvas, self.dst_image, self.dst_key_pts )
 
     ################################################################################ Source stuff
+
+    ########################################
+    def _setup_src(self):
+        ''''''
+        # set the name in the textEdit
+        self.ui.textEdit_src_path.setText( self.src_file_path + self.src_file_list[ self.src_current_file_idx ] )
+
+        # loading file
+        self.src_image, self.src_key_pts = self._load_files(self.src_file_path, self.src_file_list, self.src_current_file_idx)
+
+        # plotting image and key points and receiving back the list of plot objects
+        self.src_canvas, self.src_pts_plt = self._plot_image_pts( self.src_canvas, self.src_image, self.src_key_pts )
+
+        # mark associated points - this would only happen if both are loaded and drawn
+        if len(self.associated_pairs_idx) > 0:
+            for src_pt_idx, dst_pt_idx in self.associated_pairs_idx:
+                self._change_kp_appreance(self.src_pts_plt[src_pt_idx])
+                self._change_kp_appreance(self.dst_pts_plt[dst_pt_idx])
+            
+            self.src_canvas.draw()
+            self.dst_canvas.draw()
+
+
+    ########################################
     def _get_src_file_name(self):
         ''''''
         # load file path, list of files, and the index to the selected file
         res = self._get_file_name()
         if res is None: return None
         self.src_file_path, self.src_file_list, self.src_current_file_idx = res
-        src_name = self.src_file_path + self.src_file_list[ self.src_current_file_idx ]
-        self.ui.textEdit_src_path.setText( src_name )
-        
-        # loading file
-        file_path, file_name = self.src_file_path, self.src_file_list[ self.src_current_file_idx ]
-        self.src_image, self.src_key_pts = self._load_files(file_path, file_name)
 
-        # plotting image and key points and receiving back the list of plot objects
-        self.src_canvas, self.src_pts_plt = self._plot_image_pts( self.src_canvas, self.src_image, self.src_key_pts )
+        # set the name in the textEdit, loading file, plotting
+        self._setup_src()
 
     ########################################
     def _src_mouse_click(self, event):
@@ -287,14 +315,9 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
 
         # increment the current file idx
         self.src_current_file_idx = (self.src_current_file_idx+1) % len(self.src_file_list)
-        self.ui.textEdit_src_path.setText(self.src_file_path + self.src_file_list[ self.src_current_file_idx ])
 
-        # loading file
-        file_path, file_name = self.src_file_path, self.src_file_list[ self.src_current_file_idx ]
-        self.src_image, self.src_key_pts = self._load_files(file_path, file_name)
-
-        # plotting image and key points and receiving back the list of plot objects
-        self.src_canvas, self.src_pts_plt = self._plot_image_pts( self.src_canvas, self.src_image, self.src_key_pts )
+        # set the name in the textEdit, loading file, plotting
+        self._setup_src()
 
     ########################################
     def _src_previous(self):
@@ -305,31 +328,43 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
 
         # decrement the current file idx
         self.src_current_file_idx = (self.src_current_file_idx-1) % len(self.src_file_list)
-        self.ui.textEdit_src_path.setText(self.src_file_path + self.src_file_list[ self.src_current_file_idx ])
 
-        # loading file
-        file_path, file_name = self.src_file_path, self.src_file_list[ self.src_current_file_idx ]
-        self.src_image, self.src_key_pts = self._load_files(file_path, file_name)
-
-        # plotting image and key points and receiving back the list of plot objects
-        self.src_canvas, self.src_pts_plt = self._plot_image_pts( self.src_canvas, self.src_image, self.src_key_pts )
+        # set the name in the textEdit, loading file, plotting
+        self._setup_src()
 
     ################################################################################ Destination stuff
+
+    ########################################
+    def _setup_dst(self):
+        ''''''
+        # set the name in the textEdit
+        self.ui.textEdit_dst_path.setText( self.dst_file_path + self.dst_file_list[ self.dst_current_file_idx ] )
+
+        # loading file
+        self.dst_image, self.dst_key_pts = self._load_files(self.dst_file_path, self.dst_file_list, self.dst_current_file_idx)
+
+        # plotting image and key points and receiving back the list of plot objects
+        self.dst_canvas, self.dst_pts_plt = self._plot_image_pts( self.dst_canvas, self.dst_image, self.dst_key_pts )
+
+        # mark associated points - this would only happen if both are loaded and drawn
+        if len(self.associated_pairs_idx) > 0:
+            for src_pt_idx, dst_pt_idx in self.associated_pairs_idx:
+                self._change_kp_appreance(self.src_pts_plt[src_pt_idx])
+                self._change_kp_appreance(self.dst_pts_plt[dst_pt_idx])
+            
+            self.src_canvas.draw()
+            self.dst_canvas.draw()
+
+    ########################################
     def _get_dst_file_name(self):
         ''''''
         # load file path, list of files, and the index to the selected file
         res = self._get_file_name()
         if res is None: return None
         self.dst_file_path, self.dst_file_list, self.dst_current_file_idx = res
-        dst_name = self.dst_file_path + self.dst_file_list[ self.dst_current_file_idx ]
-        self.ui.textEdit_dst_path.setText( dst_name )
-        
-        # loading file
-        file_path, file_name = self.dst_file_path, self.dst_file_list[ self.dst_current_file_idx ]
-        self.dst_image, self.dst_key_pts = self._load_files(file_path, file_name)
 
-        # plotting image and key points and receiving back the list of plot objects
-        self.dst_canvas, self.dst_pts_plt = self._plot_image_pts( self.dst_canvas, self.dst_image, self.dst_key_pts )
+        # set the name in the textEdit, loading file, plotting
+        self._setup_dst()
 
     ########################################
     def _dst_mouse_click(self, event):
@@ -351,14 +386,9 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
 
         # increment the current file idx
         self.dst_current_file_idx = (self.dst_current_file_idx+1) % len(self.dst_file_list)
-        self.ui.textEdit_dst_path.setText(self.dst_file_path + self.dst_file_list[ self.dst_current_file_idx ])
 
-        # loading file
-        file_path, file_name = self.dst_file_path, self.dst_file_list[ self.dst_current_file_idx ]
-        self.dst_image, self.dst_key_pts = self._load_files(file_path, file_name)
-
-        # plotting image and key points and receiving back the list of plot objects
-        self.dst_canvas, self.dst_pts_plt = self._plot_image_pts( self.dst_canvas, self.dst_image, self.dst_key_pts )
+        # set the name in the textEdit, loading file, plotting
+        self._setup_dst()
 
     ########################################
     def _dst_previous(self):
@@ -369,14 +399,9 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
 
         # decrement the current file idx
         self.dst_current_file_idx = (self.dst_current_file_idx-1) % len(self.dst_file_list)
-        self.ui.textEdit_dst_path.setText(self.dst_file_path + self.dst_file_list[ self.dst_current_file_idx ])
 
-        # loading file
-        file_path, file_name = self.dst_file_path, self.dst_file_list[ self.dst_current_file_idx ]
-        self.dst_image, self.dst_key_pts = self._load_files(file_path, file_name)
-
-        # plotting image and key points and receiving back the list of plot objects
-        self.dst_canvas, self.dst_pts_plt = self._plot_image_pts( self.dst_canvas, self.dst_image, self.dst_key_pts )
+        # set the name in the textEdit, loading file, plotting
+        self._setup_dst()
 
     #########################################################################
     #################################################################### MISC

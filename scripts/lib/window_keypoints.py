@@ -59,6 +59,10 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_keypoint.Ui_MainWindow):
         self.ui.pushButton_save.clicked.connect(self._save)
         self.ui.checkBox_save_with_nxt_prv.toggled.connect(self._print_save_warning)
 
+        # make a dir for saving association results
+        self.results_path = os.getcwd()+'/../keypoints_associations/'
+        if not( os.path.isdir( self.results_path ) ):
+            os.system( 'mkdir {:s}'.format(self.results_path) )
 
     #########################################################################
     #################################################### methods of the class
@@ -97,8 +101,9 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_keypoint.Ui_MainWindow):
         self.image = np.flipud( cv2.imread( self.file_path + image_name, cv2.IMREAD_GRAYSCALE) )
 
         # check if a key_point_file already exists, if so load from file
-        if image_name[:-3]+'npy' in os.listdir(self.file_path):
-            self.key_pts = [list(pt) for pt in np.load(self.file_path+image_name[:-3]+'npy')]
+        keypoint_name = 'keypoints_'+self.file_list[ self.current_file_idx ][:-3]+'npy'
+        if keypoint_name in os.listdir(self.results_path):
+            self.key_pts = [list(pt) for pt in np.load(self.results_path + keypoint_name)]
         else:
             self.key_pts = []
 
@@ -150,8 +155,8 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_keypoint.Ui_MainWindow):
     def _save(self):
         ''''''
         if len(self.key_pts)>0:
-            image_name = self.file_list[ self.current_file_idx ]
-            np.save(self.file_path+image_name[:-3]+'npy', self.key_pts)
+            keypoint_name = 'keypoints_'+self.file_list[ self.current_file_idx ][:-3]+'npy'
+            np.save(self.results_path + keypoint_name, self.key_pts)
 
     ########################################
     def _mouse_click(self, event):

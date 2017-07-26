@@ -80,14 +80,11 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         # setting to None, so when both src and dst are selected
         # check for the existence of association file
         self.src_current_file_idx, self.dst_current_file_idx = None, None
-
-        # assuming the association files are stored "nearby"!
-        self.associations_path = os.getcwd()+'/keypoint_associations/'
-
-
         self.src_pts_plt, self.dst_pts_plt = [], []
         
-        
+        # address to result files, ie keypoints and associations
+        self.results_path = os.getcwd()+'/../keypoints_associations/'
+    
 
     ################################################################################ 
     ########################################################### methods of the class
@@ -121,15 +118,16 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         return file_path, file_list, current_file_idx
 
     ######################################## generic
-    def _load_files(self, file_path, file_name):
+    def _load_files(self, file_path, file_list, current_file_idx):
         ''''''
         # load image
-        image = np.flipud( cv2.imread( file_path + file_name, cv2.IMREAD_GRAYSCALE) )
+        image = np.flipud( cv2.imread( file_path + file_list[current_file_idx], cv2.IMREAD_GRAYSCALE) )
 
         # check if a key_point_file already exists, if so load from file
-        if file_name[:-3]+'npy' in os.listdir(file_path):
-            # key_pts = [list(pt) for pt in np.load(file_path+file_name[:-3]+'npy')]
-            key_pts = np.load(file_path+file_name[:-3]+'npy')
+        keypoint_name = 'keypoints_'+file_list[ current_file_idx ][:-3]+'npy'
+
+        if keypoint_name in os.listdir(self.results_path):
+            key_pts = np.load(self.results_path+keypoint_name)
         else:
             key_pts = np.array([])# []
 
@@ -141,16 +139,17 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
             src_name = self.src_file_list[ self.src_current_file_idx ]
             dst_name = self.dst_file_list[ self.dst_current_file_idx ]
             association_name = 'association_'+src_name[:-4]+'_'+dst_name[:-4]+'.npy'
-            association_exists = association_name in os.listdir(self.associations_path)
+            association_exists = association_name in os.listdir(self.results_path)
             
         if association_exists:
-            self.associated_pairs_idx = np.load(self.associations_path+association_name)
+            self.associated_pairs_idx = np.load(self.results_path+association_name)
         else:
             self.associated_pairs_idx = np.array([])
         self.associated_plt = []
 
         return image, key_pts
         
+
     ######################################## generic
     def _plot_overlay(self):
         ''''''
@@ -164,14 +163,41 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
             tform_type = self.ui.comboBox_tform_type.currentText()
             tform = skimage.transform.estimate_transform( tform_type, src_pts, dst_pts )
 
-            # the rest of this method does not work with for 'piecewise-affine'
-            # check out this guy:
+            # the rest of this method does not work with for 'piecewise-affine' and 'polynomial'
+            # for these two cases, I only print the matrices now, later check out this guy:
             # http://scikit-image.org/docs/0.12.x/api/skimage.transform.html#skimage.transform.warp
+
             if tform_type == 'piecewise-affine':
-                self.ui.textEdit_tform_frw.setText( 'piecewise-affine is a composition\n of multiple matrices' )
-                self.ui.textEdit_tform_inv.setText( 'piecewise-affine is a composition\n of multiple matrices' )
+                frw_str = '**** totally {:d} matrices'.format(len(tform.affines))
+                frw_str += '\n--------------------------'
+                for m_idx, affine in enumerate(tform.affines):
+                    frw_str += '\n * matrix {:d} \n'.format(m_idx)
+                    frw_str += '\n'.join(['|{:.5f}, {:.5f}, {:.5f}|'.format(a,b,c) for a,b,c in affine.params])
+                    frw_str += '\n--------------------------\n'
+
+                inv_str = '**** totally {:d} matrices'.format(len(tform.inverse_affines))
+                inv_str += '\n--------------------------'
+                for m_idx, affine in enumerate(tform.inverse_affines):
+                    inv_str += '\n * matrix {:d} \n'.format(m_idx)
+                    inv_str += '\n'.join(['|{:.5f}, {:.5f}, {:.5f}|'.format(a,b,c) for a,b,c in affine.params])
+                    inv_str += '\n--------------------------\n'
+
+                self.ui.textEdit_tform_frw.setText( frw_str )
+                self.ui.textEdit_tform_inv.setText( inv_str )
                 self.main_canvas.draw()
                 return 
+
+            
+            if tform_type == 'polynomial':
+                frw_str = '\n'.join(['|{:.5f}, {:.5f}, {:.5f},\n {:.5f}, {:.5f}, {:.5f}|'.format(a,b,c,d,e,f)
+                                     for a,b,c,d,e,f in tform.params])
+                inv_str = ' "Polynomial Transform" does not have inverse matrix'
+
+                self.ui.textEdit_tform_frw.setText( frw_str )
+                self.ui.textEdit_tform_inv.setText( inv_str )
+                self.main_canvas.draw()
+                return 
+
 
             # print the forward and inverse transformation matrices
             frw_str = '\n'.join(['|{:.5f}, {:.5f}, {:.5f}|'.format(a,b,c) for a,b,c in tform.params])
@@ -203,8 +229,12 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
     ######################################## generic
     def _plot_image_pts(self):
         ''''''
-        # clear all axis
+
+        # clear all axis, figure line (associations), matrix prints
         for axis in self.main_canvas.axes: axis.cla()
+        self.main_canvas.fig.lines = []
+        self.ui.textEdit_tform_frw.setText( '' )
+        self.ui.textEdit_tform_inv.setText( '' )
 
         # check who is ready to be plotted
         src_loaded = self.src_current_file_idx is not None
@@ -268,8 +298,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         self.ui.textEdit_src_path.setText( self.src_file_path + self.src_file_list[ self.src_current_file_idx ] )
 
         # loading file
-        file_path, file_name = self.src_file_path, self.src_file_list[ self.src_current_file_idx ]
-        self.src_image, self.src_key_pts = self._load_files(file_path, file_name)
+        self.src_image, self.src_key_pts = self._load_files(self.src_file_path, self.src_file_list, self.src_current_file_idx)
 
         # plotting image and key points and receiving back the list of plot objects
         self._plot_image_pts()
@@ -313,8 +342,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         self.ui.textEdit_dst_path.setText( self.dst_file_path + self.dst_file_list[ self.dst_current_file_idx ] )
 
         # loading file
-        file_path, file_name = self.dst_file_path, self.dst_file_list[ self.dst_current_file_idx ]
-        self.dst_image, self.dst_key_pts = self._load_files(file_path, file_name)
+        self.dst_image, self.dst_key_pts = self._load_files(self.dst_file_path, self.dst_file_list, self.dst_current_file_idx)
 
         # plotting image and key points and receiving back the list of plot objects
         self._plot_image_pts()

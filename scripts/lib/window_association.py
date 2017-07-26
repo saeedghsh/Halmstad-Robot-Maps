@@ -1,5 +1,5 @@
 '''
-Copyright (C) 2015 Saeed Gholami Shahbandi. All rights reserved.
+Copyright (C) 2017 Saeed Gholami Shahbandi. All rights reserved.
 
 This program is free software: you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public License
@@ -120,9 +120,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
     def _get_file_name(self):
         ''''''
         # trigger pop-up to select a file
-        dir_suggestion = '/home/saesha/Dropbox/myGits/Halmstad-Robot-Maps/E5/pseudo_occupancy'
-        file_path_name = PySide.QtGui.QFileDialog.getOpenFileName(None, 'Open File', dir_suggestion)[0]
-        # file_path_name = PySide.QtGui.QFileDialog.getOpenFileName()[0]
+        file_path_name = PySide.QtGui.QFileDialog.getOpenFileName()[0]
 
         # extract file path
         spl = file_path_name.split('/')
@@ -138,7 +136,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         # get the index of the current file and set the text
         current_file_idx = file_list.index( spl[-1] ) if spl[-1][-3:] == 'png' else 0
 
-        # note that the path-name to current file is always given by:
+        ### NOTE that the path-name to current file is always given by:
         # file_path + file_list[ current_file_idx ]
 
         return file_path, file_list, current_file_idx
@@ -162,7 +160,6 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
             dst_name = self.dst_file_list[ self.dst_current_file_idx ]
             association_name = 'association_'+src_name[:-4]+'_'+dst_name[:-4]+'.npy'
             association_exists = association_name in os.listdir(self.associations_path)
-            print (association_exists)
             self.ui.checkBox_association_exists.setChecked(association_exists)
 
         return image, key_pts
@@ -202,17 +199,27 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
     ######################################## generic
     def _mouse_right_click(self):
         ''' right-middle click: establish association '''
+
+        def change_kp_appreance(plt_obj):
+            # plt_obj.remove()
+            plt_obj.set_picker(0) # this point won't be pickable anymore
+            plt_obj.set_color('b')
+            plt_obj.set_alpha(0.7)
+            # plt_obj.set_marker('*')
+
         # add new pair to association list
         self.associated_pairs_idx.append( (self.src_pt_idx, self.dst_pt_idx) )
 
         # remove original and marker on the selected point in the src image
         self.src_pt_marker.pop().remove()
-        self.src_pts_plt[self.src_pt_idx].remove() # dont pop! just remvoe from drawing!
+        # self.src_pts_plt[self.src_pt_idx].remove() # dont pop! just remvoe from drawing!
+        change_kp_appreance(self.src_pts_plt[self.src_pt_idx])
         self.src_pt_idx = None
 
         # remove original and marker on the selected point in the dst image
         self.dst_pt_marker.pop().remove()
-        self.dst_pts_plt[self.dst_pt_idx].remove() # dont pop! just remvoe from drawing!
+        # self.dst_pts_plt[self.dst_pt_idx].remove() # dont pop! just remvoe from drawing!
+        change_kp_appreance(self.dst_pts_plt[self.dst_pt_idx])
         self.dst_pt_idx = None
 
         assert len(self.src_pt_marker) == len(self.dst_pt_marker) == 0
@@ -229,17 +236,19 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         if len(self.associated_pairs_idx)>0:
             src_name = self.src_file_list[ self.src_current_file_idx ]
             dst_name = self.dst_file_list[ self.dst_current_file_idx ]
+            # from source to destination
             association_name = 'association_'+src_name[:-4]+'_'+dst_name[:-4]+'.npy'
             np.save(self.associations_path+association_name, self.associated_pairs_idx)
-
+            # from destination to source
+            association_name = 'association_'+dst_name[:-4]+'_'+src_name[:-4]+'.npy'
+            np.save(self.associations_path+association_name, np.roll( self.associated_pairs_idx,1, axis=1) )
 
     ########################################
     def _reset(self):
         ''''''
-        pass
-
-
-
+        self.associated_pairs_idx = []
+        self.src_canvas, self.src_pts_plt = self._plot_image_pts( self.src_canvas, self.src_image, self.src_key_pts )
+        self.dst_canvas, self.dst_pts_plt = self._plot_image_pts( self.dst_canvas, self.dst_image, self.dst_key_pts )
 
     ################################################################################ Source stuff
     def _get_src_file_name(self):
@@ -305,7 +314,6 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         # plotting image and key points and receiving back the list of plot objects
         self.src_canvas, self.src_pts_plt = self._plot_image_pts( self.src_canvas, self.src_image, self.src_key_pts )
 
-
     ################################################################################ Destination stuff
     def _get_dst_file_name(self):
         ''''''
@@ -370,48 +378,53 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         # plotting image and key points and receiving back the list of plot objects
         self.dst_canvas, self.dst_pts_plt = self._plot_image_pts( self.dst_canvas, self.dst_image, self.dst_key_pts )
 
-        
-
     #########################################################################
     #################################################################### MISC
     #########################################################################
     def _print_save_warning(self):
         if not( self.ui.checkBox_save_with_nxt_prv.isChecked() ):
-            print ('\t *** Warning: by unchecking this option you have to save manually ***')
+            warning = '''
+            *** Warning ***
+            By unchecking this option you will have to save manually.
+            When you are done with a pair of images you have to save,
+            the result by using the "save" button. Otherwise, check
+            this box and by using the "next" and "previous" buttons
+            the results will be saved automatically.
+            '''
+            PySide.QtGui.QMessageBox.about(self, 'warning', warning)
 
     ########################################
     def dummy(self, event=None):
         print ( 'dummy is called...' )
-        
 
     ########################################
     def _instructions(self):
         instructions = '''
-        left-click near a key point to select, it will be marked green
-        left-click near the corresponding key point in the other map
-        right-click to pair selected points
+        left-click near a key point to select, it will be marked green.
+        left-click near the corresponding key point in the other map.
+        right-click* to pair selected points.
+        points that are alreay associated will turn blue.
         
-        *** NOTE ***
-        since "pick_event" is used to select points, a click is only registered if it is near a point,
-        even the right-click which its location does not matter...
+        * NOTE
+        since "pick_event" is used to select points, a click is only
+        registered if it is near a point, even the right-click which
+        its location does not matter...
         '''
         PySide.QtGui.QMessageBox.about(self, 'instructions', instructions)
     
-
     ########################################
     def _about(self):
-        return None
         __version__ = .1
         about = '''
-        <b>Version</b> {:s}
-        <p>Copyright &copy; 2017 Saeed Gholami Shahbandi.
+        Version {:s}
+        Copyright (c) 2017 Saeed Gholami Shahbandi.
         All rights reserved in accordance with GNU license
-        <p>This GUI ... 
-        <p>Python {:s} - PySide version {:s} - Qt version {:s} on {:s}
+
+        Python {:s} - PySide version {:s} - Qt version {:s} on {:s}
         '''.format( str(__version__),
                     platform.python_version(),
                     PySide.__version__,
-                    QtCore.__version__,
+                    PySide.QtCore.__version__,
                     platform.system() )
 
         PySide.QtGui.QMessageBox.about(self, "xxx", about)

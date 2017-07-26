@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gui_association.ui'
 #
-# Created: Tue Jul 25 23:52:42 2017
+# Created: Wed Jul 26 13:48:27 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -82,7 +82,7 @@ class Ui_MainWindow(object):
         self.pushButton_instructions.setGeometry(QtCore.QRect(1440, 950, 111, 27))
         self.pushButton_instructions.setObjectName("pushButton_instructions")
         self.pushButton_about = QtGui.QPushButton(self.centralwidget)
-        self.pushButton_about.setEnabled(False)
+        self.pushButton_about.setEnabled(True)
         self.pushButton_about.setGeometry(QtCore.QRect(1440, 980, 111, 27))
         self.pushButton_about.setObjectName("pushButton_about")
         self.checkBox_association_exists = QtGui.QCheckBox(self.centralwidget)

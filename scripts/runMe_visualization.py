@@ -24,13 +24,13 @@ import PySide
 sys.path.append('gui/')
 sys.path.append('lib/')
 
-import window_association
+import window_visualization
 
 __version__ = '0.1'
 
 if __name__ == '__main__':
     app = PySide.QtGui.QApplication(sys.argv)
-    myGUI = window_association.MainWindow()
+    myGUI = window_visualization.MainWindow()
     myGUI.show()
     app.exec_()
     # sys.exit(app.exec_())

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1569</width>
+    <width>1888</width>
     <height>1084</height>
    </rect>
   </property>
@@ -14,12 +14,12 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton_loading">
+   <widget class="QPushButton" name="pushButton_src_load">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>930</y>
-      <width>151</width>
+      <x>10</x>
+      <y>950</y>
+      <width>130</width>
       <height>27</height>
      </rect>
     </property>
@@ -27,45 +27,60 @@
      <string>Load Source Map</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox_draw_list_vs_buffer">
+   <widget class="QComboBox" name="comboBox_tform_type">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>1010</y>
+      <x>1080</x>
+      <y>950</y>
       <width>201</width>
       <height>24</height>
      </rect>
     </property>
     <item>
      <property name="text">
-      <string>Affine Transfrom</string>
+      <string>similarity</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Similarity Transform</string>
+      <string>polynomial</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>affine</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>piecewise-affine</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>projective</string>
      </property>
     </item>
    </widget>
-   <widget class="QTextEdit" name="textEdit_dominant_orientations">
+   <widget class="QTextEdit" name="textEdit_src_path">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>930</y>
+      <x>146</x>
+      <y>951</y>
       <width>660</width>
-      <height>30</height>
+      <height>26</height>
      </rect>
     </property>
     <property name="readOnly">
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_loading_2">
+   <widget class="QPushButton" name="pushButton_dst_load">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>970</y>
-      <width>151</width>
+      <x>10</x>
+      <y>979</y>
+      <width>130</width>
       <height>27</height>
      </rect>
     </property>
@@ -73,13 +88,13 @@
      <string>Load Destination Map</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit_dominant_orientations_2">
+   <widget class="QTextEdit" name="textEdit_dst_path">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>970</y>
+      <x>146</x>
+      <y>980</y>
       <width>660</width>
-      <height>30</height>
+      <height>26</height>
      </rect>
     </property>
     <property name="readOnly">
@@ -89,23 +104,23 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>1010</y>
-      <width>131</width>
-      <height>21</height>
+      <x>983</x>
+      <y>953</y>
+      <width>91</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Transform Class&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit_dominant_orientations_3">
+   <widget class="QTextEdit" name="textEdit_tform_frw">
     <property name="geometry">
      <rect>
-      <x>1210</x>
-      <y>930</y>
-      <width>311</width>
-      <height>101</height>
+      <x>1381</x>
+      <y>950</y>
+      <width>240</width>
+      <height>80</height>
      </rect>
     </property>
     <property name="readOnly">
@@ -115,189 +130,22 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>1100</x>
-      <y>940</y>
-      <width>101</width>
+      <x>1380</x>
+      <y>930</y>
+      <width>240</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Transform Matrix&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Forward Transform Matrix &lt;/span&gt;(5 points precision)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QTabWidget" name="tabWidget">
+   <widget class="QCheckBox" name="checkBox_show_keypoints">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>0</y>
-      <width>1551</width>
-      <height>921</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>All</string>
-     </attribute>
-     <widget class="Line" name="line_2">
-      <property name="geometry">
-       <rect>
-        <x>510</x>
-        <y>30</y>
-        <width>20</width>
-        <height>841</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-     <widget class="QGraphicsView" name="graphicsView_traits_visualization_3">
-      <property name="geometry">
-       <rect>
-        <x>1040</x>
-        <y>20</y>
-        <width>491</width>
-        <height>860</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QGraphicsView" name="graphicsView_traits_visualization">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>491</width>
-        <height>860</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="Line" name="line_3">
-      <property name="geometry">
-       <rect>
-        <x>1020</x>
-        <y>30</y>
-        <width>20</width>
-        <height>841</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-     <widget class="QGraphicsView" name="graphicsView_traits_visualization_2">
-      <property name="geometry">
-       <rect>
-        <x>530</x>
-        <y>20</y>
-        <width>491</width>
-        <height>860</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_11">
-      <property name="geometry">
-       <rect>
-        <x>1250</x>
-        <y>0</y>
-        <width>131</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Destination Map&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_10">
-      <property name="geometry">
-       <rect>
-        <x>730</x>
-        <y>0</y>
-        <width>131</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Overlay&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_9">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>0</y>
-        <width>131</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Source Map&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-     <zorder>line_16</zorder>
-     <zorder>line_2</zorder>
-     <zorder>graphicsView_traits_visualization_3</zorder>
-     <zorder>graphicsView_traits_visualization</zorder>
-     <zorder>line_3</zorder>
-     <zorder>graphicsView_traits_visualization_2</zorder>
-     <zorder>label_11</zorder>
-     <zorder>label_10</zorder>
-     <zorder>label_9</zorder>
-    </widget>
-    <widget class="QWidget" name="tab_3">
-     <attribute name="title">
-      <string>Source Map</string>
-     </attribute>
-     <widget class="QGraphicsView" name="graphicsView_traits_visualization_4">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>1521</width>
-        <height>871</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_4">
-     <attribute name="title">
-      <string>Destination Map</string>
-     </attribute>
-     <widget class="QGraphicsView" name="graphicsView_traits_visualization_5">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>1521</width>
-        <height>871</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string>Overlay</string>
-     </attribute>
-     <widget class="QGraphicsView" name="graphicsView_traits_visualization_6">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>1521</width>
-        <height>871</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-   </widget>
-   <widget class="QCheckBox" name="checkBox_visualize_arcs_2">
-    <property name="geometry">
-     <rect>
-      <x>740</x>
-      <y>1010</y>
-      <width>111</width>
+      <x>1080</x>
+      <y>980</y>
+      <width>110</width>
       <height>21</height>
      </rect>
     </property>
@@ -308,11 +156,11 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_loading_3">
+   <widget class="QPushButton" name="pushButton_src_next">
     <property name="geometry">
      <rect>
-      <x>940</x>
-      <y>930</y>
+      <x>886</x>
+      <y>950</y>
       <width>70</width>
       <height>27</height>
      </rect>
@@ -321,11 +169,11 @@
      <string>Next&gt;&gt;</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_loading_4">
+   <widget class="QPushButton" name="pushButton_src_previous">
     <property name="geometry">
      <rect>
-      <x>870</x>
-      <y>930</y>
+      <x>816</x>
+      <y>950</y>
       <width>70</width>
       <height>27</height>
      </rect>
@@ -334,11 +182,11 @@
      <string>&lt;&lt; Previous</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_loading_5">
+   <widget class="QPushButton" name="pushButton_dst_next">
     <property name="geometry">
      <rect>
-      <x>940</x>
-      <y>970</y>
+      <x>886</x>
+      <y>980</y>
       <width>70</width>
       <height>27</height>
      </rect>
@@ -347,17 +195,69 @@
      <string>Next&gt;&gt;</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_loading_6">
+   <widget class="QPushButton" name="pushButton_dst_previous">
     <property name="geometry">
      <rect>
-      <x>870</x>
-      <y>970</y>
+      <x>816</x>
+      <y>980</y>
       <width>70</width>
       <height>27</height>
      </rect>
     </property>
     <property name="text">
      <string>&lt;&lt; Previous</string>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="graphicsView_main">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>1871</width>
+      <height>921</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>1640</x>
+      <y>930</y>
+      <width>240</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Forward Transform Matrix &lt;/span&gt;(5 points precision)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEdit_tform_inv">
+    <property name="geometry">
+     <rect>
+      <x>1640</x>
+      <y>950</y>
+      <width>240</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_show_association">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>1000</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>show association</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
@@ -366,7 +266,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1569</width>
+     <width>1888</width>
      <height>22</height>
     </rect>
    </property>

@@ -1,5 +1,5 @@
 '''
-Copyright (C) 2015 Saeed Gholami Shahbandi. All rights reserved.
+Copyright (C) 2017 Saeed Gholami Shahbandi. All rights reserved.
 
 This program is free software: you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public License
@@ -81,3 +81,60 @@ class MyMplCanvas(FigureCanvasQTAgg):
         pts = np.array(points)
         self.axes.plot(pts[:,0],pts[:,1] , self.markers[marker_idx]) 
         self.draw()
+
+
+
+################################################################################
+################################################################################
+################################################################################
+class MyMplCanvas_sub_plots(FigureCanvasQTAgg):
+    '''
+    Ultimately, this is a QWidget (as well as a FigureCanvasQTAgg, etc.).
+    I connect this to graphicsView in the ui
+    '''
+
+    ########################################
+    def __init__(self, parent=None):#, width=5, height=4, dpi=100):
+        ''' '''
+
+        self.alpha = 1.0
+        self.markers = [ 'r.','g.','b.','k.', # 0,1,2,3
+                         'r,','g,','b,','k,', # 4,5,6,7
+                         'ro','go','bo','ko', # 8,9,10,11
+                         'r*','g*','b*','k*', # 12,13,14,15
+                         'r^','g^','b^','k^',] # 16,17,18,19
+        
+        self.fig, self.axes = plt.subplots(1, 3)#, figsize=(20,12))#, sharex=True, sharey=True)
+        for axis in self.axes: axis.axis('off')
+        plt.tight_layout(pad=0)
+
+        FigureCanvasQTAgg.__init__(self, self.fig)
+        self.setParent(parent)
+        FigureCanvasQTAgg.setSizePolicy(self, PySide.QtGui.QSizePolicy.Expanding, PySide.QtGui.QSizePolicy.Expanding)
+        FigureCanvasQTAgg.updateGeometry(self)
+
+        self.draw()
+
+    # ########################################
+    # def clear_axis(self, axis_idx=None):
+    #     ''''''
+    #     if axis_idx is None:
+    #         for axis self.axes: axis.cla()
+    #     else:
+    #         for idx in axis_idx: self.axes[idx].cla()
+           
+    #     self.draw()
+
+    # ################################################################################
+    # def plot_image(self, image, axis_idx):
+    #     '''
+    #     '''
+    #     self.axes[axis_idx].imshow(image, cmap = 'gray', interpolation='nearest', origin='lower')
+    #     self.draw()
+
+    # ################################################################################
+    # def plot_points(self, points, axis_idx, marker_idx=0):
+    #     ''' '''
+    #     pts = np.array(points)
+    #     self.axes[axis_idx].plot(pts[:,0],pts[:,1] , self.markers[marker_idx]) 
+    #     self.draw()

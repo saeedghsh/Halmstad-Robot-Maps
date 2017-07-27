@@ -73,6 +73,7 @@ class MyMplCanvas(FigureCanvasQTAgg):
         '''
         '''
         self.axes.imshow(image, cmap = 'gray', interpolation='nearest', origin='lower')
+        self.axes.axis('off')
         self.draw()
 
     ################################################################################

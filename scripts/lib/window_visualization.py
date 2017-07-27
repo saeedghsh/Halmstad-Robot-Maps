@@ -142,7 +142,10 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
             association_exists = association_name in os.listdir(self.results_path)
             
         if association_exists:
-            self.associated_pairs_idx = np.load(self.results_path+association_name)
+            self.associated_pairs_idx = np.array([ [src_idx, dst_idx]
+                                                   for src_idx,dst_idx in np.load(self.results_path+association_name)
+                                                   if src_idx is not None and  dst_idx is not None ])
+            
         else:
             self.associated_pairs_idx = np.array([])
         self.associated_plt = []
@@ -209,6 +212,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
             aff2d = matplotlib.transforms.Affine2D( tform.params )
             im_dst = self.main_canvas.axes[2].imshow(self.dst_image, origin='lower', cmap='gray', alpha=.5, clip_on=True)
             im_src = self.main_canvas.axes[2].imshow(self.src_image, origin='lower', cmap='gray', alpha=.5, clip_on=True)
+            self.main_canvas.axes[2].axis('off')
             im_src.set_transform( aff2d + self.main_canvas.axes[2].transData )
 
             # finding the extent of of dst and transformed src
@@ -242,11 +246,13 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
 
         if src_loaded:
             self.main_canvas.axes[0].imshow(self.src_image, cmap = 'gray', interpolation='nearest', origin='lower')
+            self.main_canvas.axes[0].axis('off')
             self.src_pts_plt = [ self.main_canvas.axes[0].plot(pt[0], pt[1], 'r.')[0]
                                  for pt in self.src_key_pts ]
 
         if dst_loaded:
             self.main_canvas.axes[1].imshow(self.dst_image, cmap = 'gray', interpolation='nearest', origin='lower')
+            self.main_canvas.axes[1].axis('off')
             self.dst_pts_plt = [ self.main_canvas.axes[1].plot(pt[0], pt[1], 'r.')[0]
                                  for pt in self.dst_key_pts ]
 

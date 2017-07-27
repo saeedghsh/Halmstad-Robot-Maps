@@ -166,7 +166,9 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
             self.ui.checkBox_association_exists.setChecked(association_exists)
 
         if association_exists:
-            self.associated_pairs_idx = [ list(pair) for pair in np.load(self.results_path+association_name) ]
+            self.associated_pairs_idx = [ [src_idx, dst_idx]
+                                          for src_idx,dst_idx in np.load(self.results_path+association_name)
+                                          if src_idx is not None and  dst_idx is not None ]            
         else:
             self.associated_pairs_idx = []
 
@@ -181,6 +183,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
 
         # plot image
         canvas.axes.imshow(image, cmap='gray', alpha=1., interpolation='nearest', origin='lower')
+        canvas.axes.axis('off')
 
         # plot key points - pts_plt is a list of plot object
         pts_plt = [ canvas.axes.plot(pt[0], pt[1], 'ro', picker=10, label=str(p_idx))[0]
@@ -351,7 +354,6 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
             for src_pt_idx, dst_pt_idx in self.associated_pairs_idx:
                 self._change_kp_appreance(self.src_pts_plt[src_pt_idx])
                 self._change_kp_appreance(self.dst_pts_plt[dst_pt_idx])
-            
             self.src_canvas.draw()
             self.dst_canvas.draw()
 

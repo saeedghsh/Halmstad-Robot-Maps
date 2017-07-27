@@ -12,28 +12,27 @@ These sensor map are collected as 3D meshes with a [Google Tango tablet](https:/
 Each 3D mesh is horizontally sliced and converted to occupancy-like map.
 Sensor maps vary in their global consistency and coverage of the area.
 In addition, a single layout map (in bitmap format, occupancy-like) is also provided for each environment.
-Following table provides details for each set.  
+This table provides details for each set, followed by a thumbnail overview of all maps.  
 
 Name | Type | #sensor maps | #layout | location
 ---- | ---- | ------------ | ------- | --------
 E5 | office building | 14 | 1 | Halmstad University, Sweden
 F5 | office building | 14 | 1 | Halmstad University, Sweden
-HIH | apartment | 4| 1 | Intelligent Home Environment at Halmstad University, Sweden
+HIH | apartment | 4| 1 | [Intelligent Home Environment](http://wagdem.ddi.hh.se/smartahemmet/), Halmstad, Sweden
 KPT4A | apartment | 4 | 1 | a residential apartment in Halmstad, Sweden
 
-* E5  
-  [E5](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/E5.png)
-* F5  
-  [F5](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/F5.png)
-* HIH  
-  [HIH](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/HIH.png)
-* KPT4  
-  [KPT4A](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/KPT4A.png)
+* E5:  
+  ![E5](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/E5.png)
+* F5:  
+  ![F5](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/F5.png)
+* HIH:  
+  ![HIH](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/HIH.png)
+* KPT4:  
+  ![KPT4A](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/KPT4A.png)
 
-
-
-Dependencies for scripts (annotations, loading, and visualization)
-------------------------------------------------------------------
+Dependencies
+------------
+In order to run accompanied scripts for ground truth annotations or loading and visualization of provided annotations, the following dependencies must be met:
 ```
 numpy >= 1.10.2
 opencv >= 2
@@ -41,13 +40,16 @@ matplotlib >= 1.4.3
 PySide
 scikit-image 
 ```
+Most dependencies (except for opencv) could be installed by:
+```
+git clone https://github.com/saeedghsh/Halmstad-Robot-Maps.git
+cd Halmstad-Robot-Maps
+pip install -r requirements.txt
+```
 
 Script/GUI instructions
 -----------------------
-To come:
-- manual annotation: selecting key points
-- manual annotation: associating key points
-- visualizing keypoint associations and transform estimations
+[To come](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/instructions.md)
 
 License
 -------

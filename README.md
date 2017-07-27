@@ -56,6 +56,55 @@ Distributed with a GPLv3 license; see LICENSE.
 Copyright (C) Saeed Gholami Shahbandi <saeed.gh.sh@gmail.com>
 ```
 
+<!-- Path to maps -->
+<!-- ------------ -->
+<!-- ``` -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/layout/E5_layout.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_01.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_02.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_03.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_04.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_05.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_06.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_07.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_08.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_09.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_10.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_11.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_12.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_13.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/E5/pseudo_occupancy/E5_14.png' -->
+
+<!-- 'Halmstad-Robot-Maps/maps/F5/layout/F5_layout.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_01.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_02.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_03.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_04.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_05.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_06.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_07.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_08.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_09.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_10.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_11.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_12.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_13.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/F5/pseudo_occupancy/F5_14.png' -->
+
+<!-- 'Halmstad-Robot-Maps/maps/HIH/layout/HIH_layout.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/HIH/pseudo_occupancy/HIH_01.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/HIH/pseudo_occupancy/HIH_02.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/HIH/pseudo_occupancy/HIH_03.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/HIH/pseudo_occupancy/HIH_04.png' -->
+
+<!-- 'Halmstad-Robot-Maps/maps/KPT4A/layout/KPT4A_layout.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/KPT4A/pseudo_occupancy/KPT4A_01.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/KPT4A/pseudo_occupancy/KPT4A_02.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/KPT4A/pseudo_occupancy/KPT4A_03.png' -->
+<!-- 'Halmstad-Robot-Maps/maps/KPT4A/pseudo_occupancy/KPT4A_04.png' -->
+<!-- ``` -->
+
+
 
 <!-- Ground Truth -->
 <!-- ------------ -->

@@ -16,8 +16,8 @@ This table provides details for each set, followed by a thumbnail overview of al
 
 Name | Type | #sensor maps | #layout | location
 ---- | ---- | ------------ | ------- | --------
-E5 | office building | 14 | 1 | Halmstad University, Sweden
-F5 | office building | 14 | 1 | Halmstad University, Sweden
+E5 | office building | 14 | 1 | [Halmstad University](https://www.hh.se/download/18.38e7400514bc4e0933ad51d7/1497519545385/campus-map.pdf), Sweden
+F5 | office building | 14 | 1 | [Halmstad University](https://www.hh.se/download/18.38e7400514bc4e0933ad51d7/1497519545385/campus-map.pdf), Sweden
 HIH | apartment | 4| 1 | [Intelligent Home Environment](http://wagdem.ddi.hh.se/smartahemmet/), Halmstad, Sweden
 KPT4A | apartment | 4 | 1 | a residential apartment in Halmstad, Sweden
 

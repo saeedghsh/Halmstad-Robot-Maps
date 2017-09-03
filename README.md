@@ -1,15 +1,22 @@
-A 2D Occupancy Map Dataset For Map Alignment Challenge
-------------------------------------------------------
+A Dataset Of 3D Meshes And 2D Occupancy Map
+-------------------------------------------
 A collection layout maps and sensor maps of different environments.
 This repository of maps has been collected for the verification of a map alignment method presented in the following publication.
 - S. G. Shahbandi, M. Magnusson, "2D Map Alignment With Region Decomposition", submitted to Autonomous Robots, 2017.
+
+
+
 
 Description
 -----------
 This repositoy contains a collection of maps from four different environments.
 For each environment, a set of sensor-based occupancy-like map is provided.
 These sensor map are collected as 3D meshes with a [Google Tango tablet](https://developers.google.com/tango/hardware/tablet) with the [Constructor](https://play.google.com/store/apps/details?id=com.projecttango.constructor&hl=en) application provided by Google.
+
+![HIH3D](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/HIH_3D.png)
+
 Each 3D mesh is horizontally sliced and converted to occupancy-like map.
+It should be mentioned that due to instability of the Constructor application in handling big meshes, some maps (mostly office maps) only cover the upper half (aling z-axis) of the environment in order to increase the coverage of individual maps.
 Sensor maps vary in their global consistency and coverage of the area.
 In addition, a single layout map (in bitmap format, occupancy-like) is also provided for each environment.
 This table provides details for each set, followed by a thumbnail overview of all maps.  
@@ -30,16 +37,26 @@ KPT4A | apartment | 4 | 1 | a residential apartment in Halmstad, Sweden
 * KPT4:  
   ![KPT4A](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/KPT4A.png)
 
-Dependencies
-------------
-In order to run accompanied scripts for ground truth annotations or loading and visualization of provided annotations, the following dependencies must be met:
+
+Note on mesh to occupancy map conversion:
+Due to the absence of sensor's trajectory and pose, identifying the open space and the conversion from mesh format to occupancy map has been done manually in an interactive process.
+This process also included manual filtering (eg. noise removal).
+As a consequence, the conversion is not deterministically reproducible.
+Generating a pseudo trajectory-pose state for sensor over each map, could make it possible to setup an automated procedure for the conversion.
+Such a procedure also requires a 3D point cloud filtering to result in a smooth occupancy map.
+
+
+Annotation Scripts and GUIs
+---------------------------
+In order to run accompanied scripts for ground truth annotations or visualization of the annotations, the following dependencies must be met:
 ```
 numpy >= 1.10.2
+matplotlib >= 2.0
+PySide >= 1.2.1
+scikit-image >= 0.12
 opencv >= 2
-matplotlib >= 1.4.3
-PySide
-scikit-image 
 ```
+
 Most dependencies (except for opencv) could be installed by:
 ```
 git clone https://github.com/saeedghsh/Halmstad-Robot-Maps.git
@@ -47,9 +64,7 @@ cd Halmstad-Robot-Maps
 pip install -r requirements.txt
 ```
 
-Script/GUI instructions
------------------------
-[To come](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/instructions.md)
+Instructions on how to use scripts [will come soon](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/instructions.md).
 
 License
 -------

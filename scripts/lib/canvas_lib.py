@@ -83,6 +83,12 @@ class MyMplCanvas(FigureCanvasQTAgg):
         self.axes.plot(pts[:,0],pts[:,1] , self.markers[marker_idx]) 
         self.draw()
 
+    ################################################################################
+    def plot_line(self, line, marker_idx=0):
+        ''' '''
+        self.axes.plot(line[:,0],line[:,1] , self.markers[marker_idx]+'-') 
+        self.draw()
+
 
 
 ################################################################################

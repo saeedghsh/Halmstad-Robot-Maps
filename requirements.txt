@@ -1,8 +1,8 @@
 ###### Requirements with Version Specifiers ######
 numpy >= 1.10.2
 matplotlib >= 2.0
+PySide >= 1.2.1
 scikit-image >= 0.12
-PySide >= 1.2.4
 # cv2 >= 2.0
 
 

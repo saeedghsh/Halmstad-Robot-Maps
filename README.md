@@ -1,30 +1,29 @@
-A Dataset Of 3D Meshes And 2D Occupancy Map
+A Data-set Of 3D Meshes And 2D Occupancy Map
 -------------------------------------------
 A collection layout maps and sensor maps of different environments.
 This repository of maps has been collected for the verification of a map alignment method presented in the following publication.
-- S. G. Shahbandi, M. Magnusson, "2D Map Alignment With Region Decomposition", submitted to Autonomous Robots, 2017.
-
+- Saeed Gholami Shahbandi, Martin Magnusson, *2D Map Alignment With Region Decomposition*, CoRR, abs/1709.00309, 2017. [URL](https://arxiv.org/abs/1709.00309)([code](https://github.com/saeedghsh/Map-Alignment-2D/))
 
 
 
 Description
 -----------
-This repositoy contains a collection of maps from four different environments.
+This repository contains a collection of maps from four different environments.
 For each environment, a set of sensor-based occupancy-like map is provided.
 These sensor map are collected as 3D meshes with a [Google Tango tablet](https://developers.google.com/tango/hardware/tablet) with the [Constructor](https://play.google.com/store/apps/details?id=com.projecttango.constructor&hl=en) application provided by Google.
 
 ![HIH3D](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/HIH_3D.png)
 
 Each 3D mesh is horizontally sliced and converted to occupancy-like map.
-It should be mentioned that due to instability of the Constructor application in handling big meshes, some maps (mostly office maps) only cover the upper half (aling z-axis) of the environment in order to increase the coverage of individual maps.
+It should be mentioned that due to instability of the Constructor application in handling big meshes, some maps (mostly office maps) only cover the upper half (along z-axis) of the environment in order to increase the coverage of individual maps.
 Sensor maps vary in their global consistency and coverage of the area.
 In addition, a single layout map (in bitmap format, occupancy-like) is also provided for each environment.
 This table provides details for each set, followed by a thumbnail overview of all maps.  
 
 Name | Type | #sensor maps | #layout | location
 ---- | ---- | ------------ | ------- | --------
-E5 | office building | 14 | 1 | [Halmstad University](https://www.hh.se/download/18.38e7400514bc4e0933ad51d7/1497519545385/campus-map.pdf), Sweden
-F5 | office building | 14 | 1 | [Halmstad University](https://www.hh.se/download/18.38e7400514bc4e0933ad51d7/1497519545385/campus-map.pdf), Sweden
+E5 | office building | 14 | 1 | E building, [Halmstad University](https://www.hh.se/download/18.38e7400514bc4e0933ad51d7/1497519545385/campus-map.pdf), Sweden
+F5 | office building | 14 | 1 | F building, [Halmstad University](https://www.hh.se/download/18.38e7400514bc4e0933ad51d7/1497519545385/campus-map.pdf), Sweden
 HIH | apartment | 4| 1 | [Intelligent Home Environment](http://wagdem.ddi.hh.se/smartahemmet/), Halmstad, Sweden
 KPT4A | apartment | 4 | 1 | a residential apartment in Halmstad, Sweden
 
@@ -128,7 +127,7 @@ Copyright (C) Saeed Gholami Shahbandi <saeed.gh.sh@gmail.com>
 <!-- The ground truth is provided in the form of a 3x3 matrix representing an affine transformation, stored in a NumPy binary file format ```.npy```. -->
 <!-- Provided for all pairs of maps from the same environment, sensor to sensor and sensor to layout. -->
 <!-- Important note: these ground truth are constructed from manual annotation and are estimated after the maps were generated. -->
-<!-- In cases where maps are globaly inconsistence (e.g, bent or broken), these transformation do not result in a perfect local alignment. -->
+<!-- In cases where maps are globally inconsistent (e.g, bent or broken), these transformation do not result in a perfect local alignment. -->
 
 <!-- To load transformations: -->
 <!-- ```python -->

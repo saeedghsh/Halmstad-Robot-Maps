@@ -164,10 +164,6 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
             tform_type = self.ui.comboBox_tform_type.currentText()
             tform = skimage.transform.estimate_transform( tform_type, src_pts, dst_pts )
 
-            # the rest of this method does not work with for 'piecewise-affine' and 'polynomial'
-            # for these two cases, I only print the matrices now, later check out this guy:
-            # http://scikit-image.org/docs/0.12.x/api/skimage.transform.html#skimage.transform.warp
-
             if tform_type == 'piecewise-affine':
                 frw_str = '**** totally {:d} matrices'.format(len(tform.affines))
                 frw_str += '\n--------------------------'
@@ -185,11 +181,13 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
 
                 self.ui.textEdit_tform_frw.setText( frw_str )
                 self.ui.textEdit_tform_inv.setText( inv_str )
-                self.main_canvas.draw()
-                return 
+                # self.main_canvas.draw()
+                # return 
 
-            
             if tform_type == 'polynomial':
+                #  There is no explicit way to do the inverse polynomial transformation. 
+                # Instead, estimate the inverse transformation parameters by exchanging 
+                # source and destination coordinates,then apply the forward transformation
                 frw_str = '\n'.join(['|{:.5f}, {:.5f}, {:.5f},\n {:.5f}, {:.5f}, {:.5f}|'.format(a,b,c,d,e,f)
                                      for a,b,c,d,e,f in tform.params])
                 inv_str = ' "Polynomial Transform" does not have inverse matrix'
@@ -199,39 +197,50 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
                 self.main_canvas.draw()
                 return 
 
+            if tform_type == 'affine' or tform_type == 'similarity' :
+                # print the forward and inverse transformation matrices
+                frw_str = '\n'.join(['|{:.5f}, {:.5f}, {:.5f}|'.format(a,b,c) for a,b,c in tform.params])
+                inv_str = '\n'.join(['|{:.5f}, {:.5f}, {:.5f}|'.format(a,b,c) for a,b,c in tform._inv_matrix])
+                self.ui.textEdit_tform_frw.setText( frw_str )
+                self.ui.textEdit_tform_inv.setText( inv_str )
 
-            # print the forward and inverse transformation matrices
-            frw_str = '\n'.join(['|{:.5f}, {:.5f}, {:.5f}|'.format(a,b,c) for a,b,c in tform.params])
-            inv_str = '\n'.join(['|{:.5f}, {:.5f}, {:.5f}|'.format(a,b,c) for a,b,c in tform._inv_matrix])
-            self.ui.textEdit_tform_frw.setText( frw_str )
-            self.ui.textEdit_tform_inv.setText( inv_str )
+            #################################################
+            ### drawing images and transforming src image ###
+            #################################################
+            if 0: ########## tform and overlay with matplotlib - only works for 'affine' and 'similarity' 
+                aff2d = matplotlib.transforms.Affine2D( tform.params )
+                im_dst = self.main_canvas.axes[2].imshow(self.dst_image, origin='lower', cmap='gray', alpha=.5, clip_on=True)
+                im_src = self.main_canvas.axes[2].imshow(self.src_image, origin='lower', cmap='gray', alpha=.5, clip_on=True)
+                self.main_canvas.axes[2].axis('off')
+                im_src.set_transform( aff2d + self.main_canvas.axes[2].transData )
+                
+                # finding the extent of of dst and transformed src
+                xmin_d,xmax_d, ymin_d,ymax_d = im_dst.get_extent()
+                x1, x2, y1, y2 = im_src.get_extent()
+                pts = [[x1,y1], [x2,y1], [x2,y2], [x1,y2]]
+                pts_tfrom = aff2d.transform(pts)
+                
+                xmin_s, xmax_s = np.min(pts_tfrom[:,0]), np.max(pts_tfrom[:,0]) 
+                ymin_s, ymax_s = np.min(pts_tfrom[:,1]), np.max(pts_tfrom[:,1])
+                
+                # setting the limits of axis to the extents of images
+                self.main_canvas.axes[2].set_xlim( min(xmin_s,xmin_d), max(xmax_s,xmax_d) )
+                self.main_canvas.axes[2].set_ylim( min(ymin_s,ymin_d), max(ymax_s,ymax_d) )
 
-            ### drawing images and transforming src image
-            aff2d = matplotlib.transforms.Affine2D( tform.params )
-            im_dst = self.main_canvas.axes[2].imshow(self.dst_image, origin='lower', cmap='gray', alpha=.5, clip_on=True)
-            im_src = self.main_canvas.axes[2].imshow(self.src_image, origin='lower', cmap='gray', alpha=.5, clip_on=True)
-            self.main_canvas.axes[2].axis('off')
-            im_src.set_transform( aff2d + self.main_canvas.axes[2].transData )
-
-            # finding the extent of of dst and transformed src
-            xmin_d,xmax_d, ymin_d,ymax_d = im_dst.get_extent()
-            x1, x2, y1, y2 = im_src.get_extent()
-            pts = [[x1,y1], [x2,y1], [x2,y2], [x1,y2]]
-            pts_tfrom = aff2d.transform(pts)
-            
-            xmin_s, xmax_s = np.min(pts_tfrom[:,0]), np.max(pts_tfrom[:,0]) 
-            ymin_s, ymax_s = np.min(pts_tfrom[:,1]), np.max(pts_tfrom[:,1])
-
-            # setting the limits of axis to the extents of images
-            self.main_canvas.axes[2].set_xlim( min(xmin_s,xmin_d), max(xmax_s,xmax_d) )
-            self.main_canvas.axes[2].set_ylim( min(ymin_s,ymin_d), max(ymax_s,ymax_d) )
+            else: ########## tform and overlay with skimage
+                # warp source image according to alignment tform_align
+                src_warped = skimage.transform.warp(self.src_image, tform.inverse,
+                                                    output_shape=(self.src_image.shape),
+                                                    preserve_range=True, mode='constant', cval=127)
+                
+                self.main_canvas.axes[2].imshow(self.dst_image, origin='lower', cmap='gray', alpha=.5)
+                self.main_canvas.axes[2].imshow(src_warped, origin='lower', cmap='gray', alpha=.5)
 
         self.main_canvas.draw()
 
     ######################################## generic
     def _plot_image_pts(self):
         ''''''
-
         # clear all axis, figure line (associations), matrix prints
         for axis in self.main_canvas.axes: axis.cla()
         self.main_canvas.fig.lines = []

@@ -60,7 +60,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_keypoint.Ui_MainWindow):
         self.ui.checkBox_save_with_nxt_prv.toggled.connect(self._print_save_warning)
 
         # make a dir for saving association results
-        self.results_path = os.getcwd()+'/../keypoints_associations/'
+        self.results_path = os.getcwd()+'/../annotations/'
         if not( os.path.isdir( self.results_path ) ):
             os.system( 'mkdir {:s}'.format(self.results_path) )
 

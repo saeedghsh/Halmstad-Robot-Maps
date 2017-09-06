@@ -105,7 +105,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         self.associated_pairs_idx = [] # (src_pt_idx, dst_pt_idx)
 
         # make a dir for saving association results
-        self.results_path = os.getcwd()+'/../keypoints_associations/'
+        self.results_path = os.getcwd()+'/../annotations/'
         if not( os.path.isdir( self.results_path ) ):
             os.system( 'mkdir {:s}'.format(self.results_path) )
 
@@ -321,6 +321,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
 
         # set the name in the textEdit, loading file, plotting
         self._setup_src()
+        self._setup_dst() # just for the sake of reseting the drawing
 
     ########################################
     def _src_previous(self):
@@ -334,6 +335,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
 
         # set the name in the textEdit, loading file, plotting
         self._setup_src()
+        self._setup_dst()  # just for the sake of reseting the drawing
 
     ################################################################################ Destination stuff
 
@@ -391,6 +393,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
 
         # set the name in the textEdit, loading file, plotting
         self._setup_dst()
+        self._setup_src() # just for the sake of reseting the drawing
 
     ########################################
     def _dst_previous(self):
@@ -404,6 +407,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
 
         # set the name in the textEdit, loading file, plotting
         self._setup_dst()
+        self._setup_src() # just for the sake of reseting the drawing
 
     #########################################################################
     #################################################################### MISC

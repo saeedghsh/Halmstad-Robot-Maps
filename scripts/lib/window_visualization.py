@@ -83,7 +83,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         self.src_pts_plt, self.dst_pts_plt = [], []
         
         # address to result files, ie keypoints and associations
-        self.results_path = os.getcwd()+'/../keypoints_associations/'
+        self.results_path = os.getcwd()+'/../annotations/'
     
 
     ################################################################################ 
@@ -94,9 +94,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
     def _get_file_name(self):
         ''''''
         # trigger pop-up to select a file
-        dir_suggestion = '/home/saesha/Dropbox/myGits/Halmstad-Robot-Maps/HIH/pseudo_occupancy'
-        file_path_name = PySide.QtGui.QFileDialog.getOpenFileName(None, 'Open File', dir_suggestion)[0]
-        # file_path_name = PySide.QtGui.QFileDialog.getOpenFileName()[0]
+        file_path_name = PySide.QtGui.QFileDialog.getOpenFileName()[0]
 
         # extract file path
         spl = file_path_name.split('/')

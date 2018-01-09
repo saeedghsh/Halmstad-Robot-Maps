@@ -65,11 +65,12 @@ pip install -r requirements.txt
 
 Instructions on how to use scripts [will come soon](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/instructions.md).
 
+
 License
 -------
-Distributed with a GPLv3 license; see LICENSE.
+Distributed with a GNU GENERAL PUBLIC LICENSE; see [LICENSE](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/LICENSE).
 ```
-Copyright (C) Saeed Gholami Shahbandi <saeed.gh.sh@gmail.com>
+Copyright (C) Saeed Gholami Shahbandi
 ```
 
 <!-- Path to maps -->

@@ -34,7 +34,7 @@ import gui_keypoint
 #####################################################################
 
 class MainWindow(PySide.QtGui.QMainWindow, gui_keypoint.Ui_MainWindow):
-    
+
     def __init__(self, parent=None):
         ''' '''
         super(MainWindow, self).__init__(parent)
@@ -89,7 +89,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_keypoint.Ui_MainWindow):
 
         # note that the path-name to current file is always given by:
         # self.file_path + self.file_list[ self.current_file_idx ]
-        
+
         self._load_files()
         self._plot_image_pts()
 
@@ -119,11 +119,11 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_keypoint.Ui_MainWindow):
         # plot points if exists
         if len( self.key_pts ) >0 :
             self.map_canvas.plot_points(self.key_pts, marker_idx=0)
-        
+
     ########################################
     def _next(self):
         ''''''
-        
+
         # save key points befor moving to another image
         if self.ui.checkBox_save_with_nxt_prv.isChecked(): self._save()
 
@@ -163,18 +163,18 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_keypoint.Ui_MainWindow):
         ''''''
         if (event.xdata is None) or (event.ydata is None):
             # if clicked out of axes
-            return None            
+            return None
 
         if event.button == 1:
             self.key_pts.append([event.xdata, event.ydata])
             self.map_canvas.plot_points([[event.xdata, event.ydata]], marker_idx=0)
-        
+
         elif event.button == 3 and len(self.key_pts)>0:
             self.key_pts.pop(-1)
             self._plot_image_pts()
-        
+
     ########################################
-            
+
 
 
     #########################################################################
@@ -187,14 +187,14 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_keypoint.Ui_MainWindow):
     ########################################
     def dummy(self, event=None):
         print ( 'dummy is called...' )
-        
+
     ########################################
     def about(self):
         PySide.QtGui.QMessageBox.about(self, "xxx",
                                        """<b>Version</b> %s
                                        <p>Copyright &copy; 2017 Saeed Gholami Shahbandi.
                                        All rights reserved in accordance with GNU license
-                                       <p>This GUI ... 
+                                       <p>This GUI ...
                                        <p>Python %s - PySide version %s - Qt version %s on %s""" % (__version__,
                                                                                                     platform.python_version(), PySide.__version__, QtCore.__version__,
                                                                                                     platform.system()))

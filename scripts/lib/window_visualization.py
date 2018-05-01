@@ -41,7 +41,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.ui = gui_visualization.Ui_MainWindow()
         self.ui.setupUi(self)
-        
+
         #####################################################################
         ############################## connecting graphicsViews to mpl canvas
         #####################################################################
@@ -81,14 +81,14 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         # check for the existence of association file
         self.src_current_file_idx, self.dst_current_file_idx = None, None
         self.src_pts_plt, self.dst_pts_plt = [], []
-        
+
         # address to result files, ie keypoints and associations
         self.results_path = os.getcwd()+'/../annotations/'
-    
 
-    ################################################################################ 
+
+    ################################################################################
     ########################################################### methods of the class
-    ################################################################################ 
+    ################################################################################
 
     ################################################################################ generic
     def _get_file_name(self):
@@ -138,18 +138,18 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
             dst_name = self.dst_file_list[ self.dst_current_file_idx ]
             association_name = 'association_'+src_name[:-4]+'_'+dst_name[:-4]+'.npy'
             association_exists = association_name in os.listdir(self.results_path)
-            
+
         if association_exists:
             self.associated_pairs_idx = np.array([ [src_idx, dst_idx]
                                                    for src_idx,dst_idx in np.load(self.results_path+association_name)
                                                    if src_idx is not None and  dst_idx is not None ])
-            
+
         else:
             self.associated_pairs_idx = np.array([])
         self.associated_plt = []
 
         return image, key_pts
-        
+
 
     ######################################## generic
     def _plot_overlay(self):
@@ -182,11 +182,11 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
                 self.ui.textEdit_tform_frw.setText( frw_str )
                 self.ui.textEdit_tform_inv.setText( inv_str )
                 # self.main_canvas.draw()
-                # return 
+                # return
 
             if tform_type == 'polynomial':
-                #  There is no explicit way to do the inverse polynomial transformation. 
-                # Instead, estimate the inverse transformation parameters by exchanging 
+                #  There is no explicit way to do the inverse polynomial transformation.
+                # Instead, estimate the inverse transformation parameters by exchanging
                 # source and destination coordinates,then apply the forward transformation
                 frw_str = '\n'.join(['|{:.5f}, {:.5f}, {:.5f},\n {:.5f}, {:.5f}, {:.5f}|'.format(a,b,c,d,e,f)
                                      for a,b,c,d,e,f in tform.params])
@@ -195,7 +195,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
                 self.ui.textEdit_tform_frw.setText( frw_str )
                 self.ui.textEdit_tform_inv.setText( inv_str )
                 self.main_canvas.draw()
-                return 
+                return
 
             if tform_type == 'affine' or tform_type == 'similarity' :
                 # print the forward and inverse transformation matrices
@@ -207,22 +207,22 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
             #################################################
             ### drawing images and transforming src image ###
             #################################################
-            if 0: ########## tform and overlay with matplotlib - only works for 'affine' and 'similarity' 
+            if 0: ########## tform and overlay with matplotlib - only works for 'affine' and 'similarity'
                 aff2d = matplotlib.transforms.Affine2D( tform.params )
                 im_dst = self.main_canvas.axes[2].imshow(self.dst_image, origin='lower', cmap='gray', alpha=.5, clip_on=True)
                 im_src = self.main_canvas.axes[2].imshow(self.src_image, origin='lower', cmap='gray', alpha=.5, clip_on=True)
                 self.main_canvas.axes[2].axis('off')
                 im_src.set_transform( aff2d + self.main_canvas.axes[2].transData )
-                
+
                 # finding the extent of of dst and transformed src
                 xmin_d,xmax_d, ymin_d,ymax_d = im_dst.get_extent()
                 x1, x2, y1, y2 = im_src.get_extent()
                 pts = [[x1,y1], [x2,y1], [x2,y2], [x1,y2]]
                 pts_tfrom = aff2d.transform(pts)
-                
-                xmin_s, xmax_s = np.min(pts_tfrom[:,0]), np.max(pts_tfrom[:,0]) 
+
+                xmin_s, xmax_s = np.min(pts_tfrom[:,0]), np.max(pts_tfrom[:,0])
                 ymin_s, ymax_s = np.min(pts_tfrom[:,1]), np.max(pts_tfrom[:,1])
-                
+
                 # setting the limits of axis to the extents of images
                 self.main_canvas.axes[2].set_xlim( min(xmin_s,xmin_d), max(xmax_s,xmax_d) )
                 self.main_canvas.axes[2].set_ylim( min(ymin_s,ymin_d), max(ymax_s,ymax_d) )
@@ -232,7 +232,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
                 src_warped = skimage.transform.warp(self.src_image, tform.inverse,
                                                     output_shape=(self.src_image.shape),
                                                     preserve_range=True, mode='constant', cval=127)
-                
+
                 self.main_canvas.axes[2].imshow(self.dst_image, origin='lower', cmap='gray', alpha=.5)
                 self.main_canvas.axes[2].imshow(src_warped, origin='lower', cmap='gray', alpha=.5)
 
@@ -272,7 +272,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
             self._plot_overlay()
 
             # step 2: plot the association with lines across subplots
-            # fetch associated points 
+            # fetch associated points
             src_idx, dst_idx = self.associated_pairs_idx[:,0], self.associated_pairs_idx[:,1]
             src_pts, dst_pts = self.src_key_pts[src_idx,:], self.dst_key_pts[dst_idx,:]
 
@@ -303,7 +303,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
             p.set_visible( self.ui.checkBox_show_keypoints.isChecked() )
 
         self.main_canvas.draw()
-                
+
     ################################################################################ Source stuff
     def _setup_src(self):
         ''''''
@@ -325,7 +325,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         if res is None: return None
         self.src_file_path, self.src_file_list, self.src_current_file_idx = res
 
-        # set the name in the textEdit, loading file, plotting        
+        # set the name in the textEdit, loading file, plotting
         self._setup_src()
 
     ######################################## Source stuff
@@ -334,7 +334,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         # increment the current file idx
         self.src_current_file_idx = (self.src_current_file_idx+1) % len(self.src_file_list)
 
-        # set the name in the textEdit, loading file, plotting        
+        # set the name in the textEdit, loading file, plotting
         self._setup_src()
 
 
@@ -344,7 +344,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         # decrement the current file idx
         self.src_current_file_idx = (self.src_current_file_idx-1) % len(self.src_file_list)
 
-        # set the name in the textEdit, loading file, plotting        
+        # set the name in the textEdit, loading file, plotting
         self._setup_src()
 
 
@@ -368,7 +368,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         if res is None: return None
         self.dst_file_path, self.dst_file_list, self.dst_current_file_idx = res
 
-        # set the name in the textEdit, loading file, plotting        
+        # set the name in the textEdit, loading file, plotting
         self._setup_dst()
 
     ########################################
@@ -377,7 +377,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         # increment the current file idx
         self.dst_current_file_idx = (self.dst_current_file_idx+1) % len(self.dst_file_list)
 
-        # set the name in the textEdit, loading file, plotting        
+        # set the name in the textEdit, loading file, plotting
         self._setup_dst()
 
     ########################################
@@ -386,7 +386,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
         # decrement the current file idx
         self.dst_current_file_idx = (self.dst_current_file_idx-1) % len(self.dst_file_list)
 
-        # set the name in the textEdit, loading file, plotting        
+        # set the name in the textEdit, loading file, plotting
         self._setup_dst()
 
     #########################################################################
@@ -395,7 +395,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_visualization.Ui_MainWindow):
     ########################################
     def _dummy(self, event=None):
         print ( 'dummy is called...' )
-    
+
     ########################################
     def _about(self):
         __version__ = .1

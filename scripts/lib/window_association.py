@@ -38,7 +38,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.ui = gui_association.Ui_MainWindow()
         self.ui.setupUi(self)
-        
+
         #####################################################################
         ############################## connecting graphicsViews to mpl canvas
         #####################################################################
@@ -47,14 +47,14 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         self.src_canvas = canvas_lib.MyMplCanvas(src_canvas)
         layout = PySide.QtGui.QVBoxLayout(src_canvas)
         layout.addWidget(self.src_canvas)
-        self.src_canvas.mpl_connect('pick_event', self._src_mouse_click) 
+        self.src_canvas.mpl_connect('pick_event', self._src_mouse_click)
 
         # dst
         dst_canvas = self.ui.graphicsView_dst_map
         self.dst_canvas = canvas_lib.MyMplCanvas(dst_canvas)
         layout = PySide.QtGui.QVBoxLayout(dst_canvas)
         layout.addWidget(self.dst_canvas)
-        self.dst_canvas.mpl_connect('pick_event', self._dst_mouse_click) 
+        self.dst_canvas.mpl_connect('pick_event', self._dst_mouse_click)
 
         #####################################################################
         #####################################################################
@@ -73,7 +73,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         self.ui.pushButton_dst_load_map.clicked.connect(self._get_dst_file_name)
         self.ui.pushButton_dst_next.clicked.connect(self._dst_next)
         self.ui.pushButton_dst_previous.clicked.connect(self._dst_previous)
-        
+
         ### ctrl
         # self.ui.checkBox_association_exists
         # self.ui.checkBox_show_association
@@ -112,9 +112,9 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         # self._instructions()
 
 
-    ################################################################################ 
+    ################################################################################
     ########################################################### methods of the class
-    ################################################################################ 
+    ################################################################################
 
     ################################################################################ generic
     def _get_file_name(self):
@@ -168,13 +168,13 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         if association_exists:
             self.associated_pairs_idx = [ [src_idx, dst_idx]
                                           for src_idx,dst_idx in np.load(self.results_path+association_name)
-                                          if src_idx is not None and  dst_idx is not None ]            
+                                          if src_idx is not None and  dst_idx is not None ]
         else:
             self.associated_pairs_idx = []
 
 
         return image, key_pts
-        
+
     ######################################## generic
     def _plot_image_pts(self, canvas, image, points):
         ''''''
@@ -196,10 +196,10 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
     ######################################## generic
     def _mouse_left_click(self, event, canvas, points, pt_marker):
         ''' left click: select and mark a new point '''
- 
+
         ### fetch the index of the selected key point
         pt_idx = int(event.artist._label)
-        
+
         ### mark selected point
         # if a point is already marked, delete it
         if len(pt_marker) > 0: pt_marker[0].remove()
@@ -282,7 +282,7 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
             for src_pt_idx, dst_pt_idx in self.associated_pairs_idx:
                 self._change_kp_appreance(self.src_pts_plt[src_pt_idx])
                 self._change_kp_appreance(self.dst_pts_plt[dst_pt_idx])
-            
+
             self.src_canvas.draw()
             self.dst_canvas.draw()
 
@@ -435,14 +435,14 @@ class MainWindow(PySide.QtGui.QMainWindow, gui_association.Ui_MainWindow):
         left-click near the corresponding key point in the other map.
         right-click* to pair selected points.
         points that are alreay associated will turn blue.
-        
+
         * NOTE
         since "pick_event" is used to select points, a click is only
         registered if it is near a point, even the right-click which
         its location does not matter...
         '''
         PySide.QtGui.QMessageBox.about(self, 'instructions', instructions)
-    
+
     ########################################
     def _about(self):
         __version__ = .1

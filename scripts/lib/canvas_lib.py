@@ -51,7 +51,7 @@ class MyMplCanvas(FigureCanvasQTAgg):
                          'ro','go','bo','ko', # 8,9,10,11
                          'r*','g*','b*','k*', # 12,13,14,15
                          'r^','g^','b^','k^',] # 16,17,18,19
-        
+
         self.fig, self.axes = plt.subplots(1, 1)#, figsize=(20,12))#, sharex=True, sharey=True)
         self.axes.axis('off')
         plt.tight_layout(pad=0)
@@ -80,13 +80,13 @@ class MyMplCanvas(FigureCanvasQTAgg):
     def plot_points(self, points, marker_idx=0):
         ''' '''
         pts = np.array(points)
-        self.axes.plot(pts[:,0],pts[:,1] , self.markers[marker_idx]) 
+        self.axes.plot(pts[:,0],pts[:,1] , self.markers[marker_idx])
         self.draw()
 
     ################################################################################
     def plot_line(self, line, marker_idx=0):
         ''' '''
-        self.axes.plot(line[:,0],line[:,1] , self.markers[marker_idx]+'-') 
+        self.axes.plot(line[:,0],line[:,1] , self.markers[marker_idx]+'-')
         self.draw()
 
 
@@ -110,7 +110,7 @@ class MyMplCanvas_sub_plots(FigureCanvasQTAgg):
                          'ro','go','bo','ko', # 8,9,10,11
                          'r*','g*','b*','k*', # 12,13,14,15
                          'r^','g^','b^','k^',] # 16,17,18,19
-        
+
         self.fig, self.axes = plt.subplots(1, 3)#, figsize=(20,12))#, sharex=True, sharey=True)
         for axis in self.axes: axis.axis('off')
         plt.tight_layout(pad=0)
@@ -129,7 +129,7 @@ class MyMplCanvas_sub_plots(FigureCanvasQTAgg):
     #         for axis self.axes: axis.cla()
     #     else:
     #         for idx in axis_idx: self.axes[idx].cla()
-           
+
     #     self.draw()
 
     # ################################################################################
@@ -143,5 +143,5 @@ class MyMplCanvas_sub_plots(FigureCanvasQTAgg):
     # def plot_points(self, points, axis_idx, marker_idx=0):
     #     ''' '''
     #     pts = np.array(points)
-    #     self.axes[axis_idx].plot(pts[:,0],pts[:,1] , self.markers[marker_idx]) 
+    #     self.axes[axis_idx].plot(pts[:,0],pts[:,1] , self.markers[marker_idx])
     #     self.draw()

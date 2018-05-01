@@ -1,9 +1,13 @@
 A Data-set Of 3D Meshes And 2D Occupancy Map
 -------------------------------------------
 A collection layout maps and sensor maps of different environments.
-This repository of maps has been collected for the verification of a map alignment method presented in the following publication.
+This repository of maps has been collected for the verification of methods presented in the following publications.
 - Saeed Gholami Shahbandi, Martin Magnusson, *2D Map Alignment With Region Decomposition*, CoRR, abs/1709.00309, 2017. [URL](https://arxiv.org/abs/1709.00309)([code](https://github.com/saeedghsh/Map-Alignment-2D/))
+- Saeed Gholami Shahbandi, Martin Magnusson, Karl Iagnemma. *Nonlinear Optimization of Multimodal Two-Dimensional Map Alignment With Application to Prior Knowledge Transfer*, in IEEE Robotics and Automation Letters, vol. 3, no. 3, pp. 2040-2047, July 2018. doi: 10.1109/LRA.2018.2806439. [URL](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8292790&isnumber=8302435)([code](https://github.com/saeedghsh/Map-Alignment-Nonrigid-Optimization-2D))
 
+<p align="center">
+	<img src="https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/rotating_3d_mesh_hih.gif" width="400">
+</p>
 
 
 Description
@@ -12,7 +16,12 @@ This repository contains a collection of maps from four different environments.
 For each environment, a set of sensor-based occupancy-like map is provided.
 These sensor map are collected as 3D meshes with a [Google Tango tablet](https://developers.google.com/tango/hardware/tablet) with the [Constructor](https://play.google.com/store/apps/details?id=com.projecttango.constructor&hl=en) application provided by Google.
 
-![HIH3D](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/HIH_3D.png)
+<p align="center">
+	<img src="https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/HIH_3D.png" width="300">
+</p>
+
+<!-- ![HIH3D](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/HIH_3D.png) -->
+<!-- ![rotatingHIH](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/rotating_3d_mesh_hih.gif) -->
 
 Each 3D mesh is horizontally sliced and converted to occupancy-like map.
 It should be mentioned that due to instability of the Constructor application in handling big meshes, some maps (mostly office maps) only cover the upper half (along z-axis) of the environment in order to increase the coverage of individual maps.

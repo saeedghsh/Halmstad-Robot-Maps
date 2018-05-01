@@ -15,14 +15,8 @@ Description
 This repository contains a collection of maps from four different environments.
 For each environment, a set of sensor-based occupancy-like map is provided.
 These sensor map are collected as 3D meshes with a [Google Tango tablet](https://developers.google.com/tango/hardware/tablet) with the [Constructor](https://play.google.com/store/apps/details?id=com.projecttango.constructor&hl=en) application provided by Google.
-
-<p align="center">
-	<img src="https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/HIH_3D.png" width="300">
-</p>
-
 <!-- ![HIH3D](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/HIH_3D.png) -->
 <!-- ![rotatingHIH](https://github.com/saeedghsh/Halmstad-Robot-Maps/blob/master/docs/rotating_3d_mesh_hih.gif) -->
-
 Each 3D mesh is horizontally sliced and converted to occupancy-like map.
 It should be mentioned that due to instability of the Constructor application in handling big meshes, some maps (mostly office maps) only cover the upper half (along z-axis) of the environment in order to increase the coverage of individual maps.
 Sensor maps vary in their global consistency and coverage of the area.
